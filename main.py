@@ -70,13 +70,17 @@ while running:
         print("残弾がありません！")
     # WASDでプレイヤー移動
       if event.key == pygame.K_w:
-        direction_p = player.move_player(0, -1, grid)  # 上方向
+        player.move_player(0, -1, grid)  # 上方向
       elif event.key == pygame.K_s:
-        direction_p = player.move_player(0, 1, grid)  # 下方向
+        player.move_player(0, 1, grid)  # 下方向
       elif event.key == pygame.K_a:
-        direction_p = player.move_player(-1, 0, grid)  # 左方向
+        player.move_player(-1, 0, grid)  # 左方向
       elif event.key == pygame.K_d:
-        direction_p = player.move_player(1, 0, grid)  # 右方向
+        player.move_player(1, 0, grid)  # 右方向
+    # 敵スポーンイベントの処理
+    if event.type == SPAWN_EVENT:
+      if len(enemies) < 5:  # 敵の上限判定
+        spawn_enemy()
 
   # 更新処理: 弾の状態を更新
   Bullet.recharge_bullet()  # プレイヤーの弾補充処理
@@ -93,10 +97,6 @@ while running:
 
   # 敵を定期的に生成
   # イベントタイマーを使った敵の自動生成
-  for event in pygame.event.get():
-    if event.type == SPAWN_EVENT:
-      if len(enemies) < 5:  # 敵の上限判定
-        spawn_enemy()
 
   # 敵の更新と描画
   for enemy in enemies[:]:
