@@ -10,7 +10,8 @@ class Enemy:
     self.active = True  # 活動中フラグ
 
     # 対象への移動方向ベクトルを計算
-    self.direction = (self.target - self.pos).normalize()
+    self.direction = (self.target * CELL_SIZE + Vector2(CELL_SIZE //
+                      2, CELL_SIZE // 2) - self.pos).normalize()
 
   def update(self, grid):
     if not self.active:
