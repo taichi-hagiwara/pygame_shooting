@@ -37,6 +37,15 @@ def spawn_enemy():
   enemy = Enemy(spawn_pos, target_pos, speed=2)  # 敵を生成
   enemies.append(enemy)
 
+def display_game_over():
+  screen.fill((0, 0, 0))  # 背景を黒にする
+  font = pygame.font.Font(None, 72)
+  text = font.render("Game Over", True, (255, 0, 0))
+  screen.blit(text, (WIDTH // 2 - text.get_width() //
+              2, HEIGHT // 2 - text.get_height() // 2))
+  pygame.display.flip()
+  pygame.time.delay(3000)  # 3秒間待つ
+
 # ゲームループ
 running = True
 while running:
@@ -101,6 +110,13 @@ while running:
   # 敵の更新と描画
   for enemy in enemies[:]:
     enemy.update(grid)
+    enemy_grid_pos = Vector2(int(enemy.pos.x // CELL_SIZE),
+                             int(enemy.pos.y // CELL_SIZE))
+    player_grid_pos = Vector2(int(player.pos.x), int(player.pos.y))
+    if enemy_grid_pos == player_grid_pos:
+      game_over = True  # ゲームオーバーフラグ
+      running = False  # ゲームループ終了
+      break  # ループを抜ける
     if not enemy.active:
       enemies.remove(enemy)  # 非アクティブな敵を削除
     enemy.draw(screen)
@@ -108,4 +124,7 @@ while running:
   # 画面更新
   pygame.display.flip()
   clock.tick(FPS)
+
+if game_over:
+  display_game_over()
 pygame.quit()
