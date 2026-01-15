@@ -12,6 +12,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 pygame.time.set_timer(SPAWN_EVENT, 1000)  # 敵スポーンイベントを毎秒1回発生
+start_ticks = pygame.time.get_ticks()  # ゲーム開始時間の取得
 
 # グリッドと弾のリスト
 grid = Grid()  # グリッドクラスのインスタンス
@@ -26,7 +27,7 @@ def reset_game():
   player = Player(Vector2(GRID_SIZE // 2, GRID_SIZE // 2))
   grid = Grid()
   game_over = False
-
+  start_ticks = pygame.time.get_ticks()  # ゲーム開始時間の取得
 def spawn_enemy():
   # ランダムに出現位置を決定
   spawn_positions = [
@@ -66,8 +67,38 @@ def display_game_over():
         pygame.quit()
         exit()
       if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_q:
+          pygame.quit()
+          exit()
         if event.key == pygame.K_r:
           return "restart"
+
+def display_game_clear():
+  screen.fill((0, 0, 0))  # 背景を黒にする
+  font = pygame.font.Font(None, 72)
+  text = font.render("You Survived!", True, (0, 255, 0))
+  screen.blit(text, (WIDTH // 2 - text.get_width() //
+              2, HEIGHT // 2 - text.get_height() // 2))
+
+  subtext = font.render(
+      "Press R to Restart or Q to Quit", True, (255, 255, 255))
+  screen.blit(subtext, (WIDTH // 2 - subtext.get_width() //
+              2, HEIGHT // 2 - text.get_height() // 2 + 50))
+
+  pygame.display.flip()
+
+  # リセット待機ループ
+  while True:
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        pygame.quit()
+        exit()
+      if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_r:  # Rキーでリスタート
+          return "restart"
+        if event.key == pygame.K_q:  # Qキーで終了
+          pygame.quit()
+          exit()
 
 while True:
   reset_game()
@@ -150,9 +181,21 @@ while True:
     pygame.display.flip()
     clock.tick(FPS)
 
+    # 経過時間の計算
+    seconds = (pygame.time.get_ticks() - start_ticks) / 1000  # 経過秒数
+    # 時間切れでゲームクリア
+    if seconds >= 60:
+      game_clear = True
+      running = False
+
   if game_over:
     display_game_over()
     if display_game_over() == "restart":
       continue
-  else:
-    break
+    else:
+      break
+  elif game_clear:
+    if display_game_clear() == "restart":
+      continue
+    elif display_game_clear() == "quit":
+      break
