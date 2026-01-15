@@ -32,5 +32,5 @@ class Enemy:
     if self.active:
       pygame.draw.rect(
           screen, RED,
-          (self.pos.x, self.pos.y, CELL_SIZE, CELL_SIZE)  # px単位の位置で描画
+          (self.pos.x, self.pos.y, CELL_SIZE // 4, CELL_SIZE // 4)  # px単位の位置で描画
       )
