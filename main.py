@@ -20,14 +20,18 @@ player = Player(Vector2(GRID_SIZE // 2, GRID_SIZE // 2))  # プレイヤーを�
 bullets = []  # 弾（Bullet）オブジェクトを管理するリスト
 enemies = []  # 敵オブジェクトを管理するリスト
 
+# リセット用の変数
 def reset_game():
-  global bullets, enemies, player, grid, game_over
+  global bullets, enemies, player, grid, game_over, game_clear, start_ticks
   bullets = []
   enemies = []
   player = Player(Vector2(GRID_SIZE // 2, GRID_SIZE // 2))
   grid = Grid()
+  start_ticks = pygame.time.get_ticks()  # ゲーム開始時間のリセット
   game_over = False
-  start_ticks = pygame.time.get_ticks()  # ゲーム開始時間の取得
+  game_clear = False
+  action = None
+
 def spawn_enemy():
   # ランダムに出現位置を決定
   spawn_positions = [
@@ -100,6 +104,8 @@ def display_game_clear():
           pygame.quit()
           exit()
 
+
+reset_game()
 while True:
   reset_game()
   # ゲームループ
@@ -188,14 +194,14 @@ while True:
       game_clear = True
       running = False
 
+  action = None
+
   if game_over:
-    display_game_over()
-    if display_game_over() == "restart":
-      continue
-    else:
-      break
+    action = display_game_over()
   elif game_clear:
-    if display_game_clear() == "restart":
-      continue
-    elif display_game_clear() == "quit":
-      break
+    action = display_game_clear()
+
+  if action == "restart":
+    continue
+  elif action == "quit":
+    break
