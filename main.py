@@ -16,6 +16,7 @@ clock = pygame.time.Clock()
 pygame.time.set_timer(SPAWN_EVENT, 1000)  # 敵スポーンイベントを毎秒1回発生
 pygame.time.set_timer(AMMO_SPAWN_EVENT, 1500)  # 弾入りマススポーンイベントを5秒毎に発生
 start_ticks = pygame.time.get_ticks()  # ゲーム開始時間の取得
+seconds = 0  # 経過時間（秒）
 
 # グリッドと弾のリスト
 grid = Grid()  # グリッドクラスのインスタンス
@@ -34,6 +35,7 @@ def reset_game():
   game_over = False
   game_clear = False
   action = None
+  Bullet.current_bullets = Bullet.max_bullets  # 残弾数リセット
 
 def spawn_enemy():
   # ランダムに出現位置を決定
@@ -110,9 +112,6 @@ def display_game_clear():
           exit()
 
 def draw_info_panel():
-  """
-  ゲーム情報を管理するパネルを描画
-  """
   info_panel.fill((50, 50, 50))  # 背景色（グレー）
 
   # 表示する情報（残弾と時間）
