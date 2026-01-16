@@ -17,7 +17,8 @@ class Grid:
           self.grid[(x, y)] = BLACK
 
         if random.random() < 0.1:
-          self.ammo_tiles[(x, y)] = True
+          if self.is_black(x, y):
+            self.ammo_tiles[(x, y)] = True
 
   def draw(self, screen):
     # 辞書から各タイル情報を描画

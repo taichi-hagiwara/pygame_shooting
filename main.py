@@ -85,10 +85,12 @@ def display_game_clear():
   screen.blit(text, (WIDTH // 2 - text.get_width() //
               2, HEIGHT // 2 - text.get_height() // 2))
 
-  subtext = font.render(
-      "Press R to Restart or Q to Quit", True, (255, 255, 255))
-  screen.blit(subtext, (WIDTH // 2 - subtext.get_width() //
+  subtext1 = font.render("Press R to Continue", True, (255, 255, 255))
+  screen.blit(subtext1, (WIDTH // 2 - subtext1.get_width() //
               2, HEIGHT // 2 - text.get_height() // 2 + 50))
+  subtext2 = font.render("Press Q to Quit", True, (255, 255, 255))
+  screen.blit(subtext2, (WIDTH // 2 - subtext2.get_width() //
+              2, HEIGHT // 2 - text.get_height() // 2 + 100))
 
   pygame.display.flip()
 
