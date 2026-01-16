@@ -1,6 +1,8 @@
 import pygame
 from pygame.math import Vector2
 from constants import BLUE, CELL_SIZE, GRID_SIZE
+from grid import Grid
+from bullet import Bullet
 
 class Player:
   def __init__(self, default_pos):
@@ -13,6 +15,11 @@ class Player:
 
     if 0 <= new_pos.x < GRID_SIZE and 0 <= new_pos.y < GRID_SIZE and grid.is_white(new_pos.x, new_pos.y):
       self.pos = new_pos
+
+      # 現在のマスが弾入りマスかを確認
+      if grid.is_ammo_tile(int(new_pos.x), int(new_pos.y)):
+        Bullet.current_bullets += 1  # 弾を1つ補充
+        grid.remove_ammo_tile(int(new_pos.x), int(new_pos.y))  # 取得済み
 
   def draw(self, screen):
     pygame.draw.circle(screen, BLUE, (self.pos.x * CELL_SIZE + CELL_SIZE //

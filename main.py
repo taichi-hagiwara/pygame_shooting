@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from constants import WIDTH, HEIGHT, GRID_SIZE, CELL_SIZE, FPS, SPAWN_EVENT
+from constants import WIDTH, HEIGHT, GRID_SIZE, CELL_SIZE, FPS, SPAWN_EVENT, AMMO_SPAWN_EVENT
 from grid import Grid
 from bullet import Bullet
 from enemy import Enemy
@@ -12,6 +12,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 pygame.time.set_timer(SPAWN_EVENT, 1000)  # 敵スポーンイベントを毎秒1回発生
+pygame.time.set_timer(AMMO_SPAWN_EVENT, 1500)  # 弾入りマススポーンイベントを5秒毎に発生
 start_ticks = pygame.time.get_ticks()  # ゲーム開始時間の取得
 
 # グリッドと弾のリスト
@@ -152,6 +153,9 @@ while True:
       if event.type == SPAWN_EVENT:
         if len(enemies) < 5:  # 敵の上限判定
           spawn_enemy()
+      # 弾入りマススポーンイベントの処理
+      if event.type == AMMO_SPAWN_EVENT:
+        grid.spawn_ammo_tile()
 
     # 更新処理: 弾の状態を更新
     Bullet.recharge_bullet()  # プレイヤーの弾補充処理

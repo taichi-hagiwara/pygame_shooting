@@ -18,3 +18,4 @@ BULLET_RECHARGE_TIME = 6 * FPS  # 6秒に1発補充
 GAME_TIME = 60 * FPS            # 1分間生存が目標
 MAX_BULLETS = 10               # 最大装填数
 SPAWN_EVENT = pygame.USEREVENT + 1  # 敵スポーン用のカスタムイベント
+AMMO_SPAWN_EVENT = pygame.USEREVENT + 2  # 弾入りマススポーン用のカスタムイベント
