@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from constants import WIDTH, HEIGHT, GRID_SIZE, CELL_SIZE, FPS, SPAWN_EVENT, AMMO_SPAWN_EVENT
+from constants import WIDTH, HEIGHT, GRID_SIZE, CELL_SIZE, FPS, SPAWN_EVENT, AMMO_SPAWN_EVENT, INFO_PANEL_HEIGHT
 from grid import Grid
 from bullet import Bullet
 from enemy import Enemy
@@ -9,7 +9,9 @@ import random
 
 # 初期化
 pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT + INFO_PANEL_HEIGHT))
+# メイン画面と情報表示パネルのサーフェイス設定
+info_panel = screen.subsurface(pygame.Rect(0, HEIGHT, WIDTH, INFO_PANEL_HEIGHT))
 clock = pygame.time.Clock()
 pygame.time.set_timer(SPAWN_EVENT, 1000)  # 敵スポーンイベントを毎秒1回発生
 pygame.time.set_timer(AMMO_SPAWN_EVENT, 1500)  # 弾入りマススポーンイベントを5秒毎に発生
@@ -107,6 +109,21 @@ def display_game_clear():
           pygame.quit()
           exit()
 
+def draw_info_panel():
+  """
+  ゲーム情報を管理するパネルを描画
+  """
+  info_panel.fill((50, 50, 50))  # 背景色（グレー）
+
+  # 表示する情報（残弾と時間）
+  font = pygame.font.Font(None, 36)
+  bullet_text = font.render(
+      f"Bullets: {Bullet.current_bullets}", True, (255, 255, 255))
+  time_text = font.render(f"Time Left: {seconds:.1f}s", True, (255, 255, 255))
+
+  # サーフェイスに描画
+  info_panel.blit(bullet_text, (10, 10))
+  info_panel.blit(time_text, (10, 50))
 
 reset_game()
 while True:
@@ -188,6 +205,8 @@ while True:
       if not enemy.active:
         enemies.remove(enemy)  # 非アクティブな敵を削除
       enemy.draw(screen)
+
+    draw_info_panel()  # 情報パネルの描画
 
     # 画面更新
     pygame.display.flip()
